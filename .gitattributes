@@ -1,0 +1,11 @@
+# Behandel veelvoorkomende binaire documenten niet als tekst.
+*.pdf  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.xlsx binary
+*.pptx binary
+*.docx binary
+*.zip  binary

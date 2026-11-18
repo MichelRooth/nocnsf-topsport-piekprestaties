@@ -1,0 +1,24 @@
+# Gevoelige lokale invoer: nooit aan Git toevoegen.
+Voorbeeld data/
+data/private/
+media/private/
+
+# Lokale configuratie en secrets.
+.env
+.env.*
+!.env.example
+
+# Ruwe logs en gegenereerde bestanden.
+logs/runtime/
+logs/test/
+output/
+tmp/
+*.log
+
+# Lokale tooling en besturingssysteem.
+node_modules/
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+~$*

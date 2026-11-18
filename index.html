@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lokaal overzicht van fictieve sportprestaties.">
+  <title>Piekprestaties — fictief overzicht</title>
+  <link rel="stylesheet" href="src/styles.css">
+  <script src="src/app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="page-header">
+      <p class="eyebrow">Lokale analysetool · fictieve gegevens</p>
+      <h1>Piekprestaties</h1>
+      <p class="intro">Bekijk en vergelijk wedstrijdresultaten per sporter. Een lagere rang betekent een betere prestatie.</p>
+    </header>
+
+    <section class="panel controls" aria-labelledby="filter-heading">
+      <div class="panel-heading">
+        <div><p class="eyebrow">Verkennen</p><h2 id="filter-heading">Kies een sporter en wedstrijden</h2></div>
+        <button id="clear-filters" class="text-button" type="button">Wis filters</button>
+      </div>
+      <label class="person-field" for="person-select">Sporter</label>
+      <select id="person-select"></select>
+      <fieldset class="competition-filters">
+        <legend>Competitiegroepen <span>(selecteer een of meer)</span></legend>
+        <div id="competition-options" class="checkbox-grid"></div>
+      </fieldset>
+      <fieldset class="competition-filters">
+        <legend>Disciplines <span>(selecteer een of meer)</span></legend>
+        <div id="discipline-options" class="checkbox-grid"></div>
+      </fieldset>
+    </section>
+
+    <section class="results-section" aria-labelledby="results-heading">
+      <div class="results-heading">
+        <div><p class="eyebrow">Resultaten</p><h2 id="results-heading">Prestaties</h2></div>
+        <p id="result-summary" class="result-summary" aria-live="polite"></p>
+      </div>
+      <div id="results-container"></div>
+    </section>
+    <footer>Deze demonstratie gebruikt uitsluitend zelfgemaakte fictieve gegevens. Er is geen data-import.</footer>
+  </main>
+</body>
+</html>

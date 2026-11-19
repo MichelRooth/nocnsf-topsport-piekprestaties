@@ -18,13 +18,21 @@
 
     <section class="panel controls" aria-labelledby="filter-heading">
       <div class="panel-heading">
-        <div><p class="eyebrow">Verkennen</p><h2 id="filter-heading">Kies een sporter en wedstrijden</h2></div>
+        <div><p class="eyebrow">Verkennen</p><h2 id="filter-heading">Kies een sporter en filter prestaties</h2></div>
         <button id="clear-filters" class="text-button" type="button">Wis filters</button>
       </div>
       <label class="person-field" for="person-select">Sporter</label>
       <select id="person-select"></select>
       <fieldset class="competition-filters">
-        <legend>Competitiegroepen <span>(selecteer een of meer)</span></legend>
+        <legend>Sport <span>(selecteer een of meer)</span></legend>
+        <div id="sport-options" class="checkbox-grid"></div>
+      </fieldset>
+      <fieldset class="competition-filters">
+        <legend>Jaar <span>(selecteer een of meer)</span></legend>
+        <div id="year-options" class="checkbox-grid"></div>
+      </fieldset>
+      <fieldset class="competition-filters">
+        <legend>CompetitieSet <span>(selecteer een of meer)</span></legend>
         <div id="competition-options" class="checkbox-grid"></div>
       </fieldset>
       <fieldset class="competition-filters">

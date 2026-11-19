@@ -1,35 +1,42 @@
 # NOC*NSF topsport piekprestaties
 
-Een lokale webapp om prestaties per sporter te bekijken, op `Rank` te
-rangschikken en te filteren op competitiegroep en discipline. De huidige app is
-een testbare eerste versie met uitsluitend zelfgemaakte fictieve gegevens.
+**App openen: open [`index.html`](index.html) rechtstreeks in je browser.**
+
+Een lokale webapp om prestaties per sporter te bekijken en te filteren op sport,
+jaar, `CompetitieSet` en discipline. De app gebruikt uitsluitend zelfgemaakte
+fictieve gegevens.
 
 ## Huidige status
 
-De basisfunctionaliteit is gebouwd. De gebruiker kan een sporter kiezen,
-competitiegroepen en disciplines combineren, de filters wissen en de
-resultatenlijst bekijken. De tabel toont zowel de oorspronkelijke `Rank` als
-een aparte kolom `Resultaat`. `Resultaat` is het volgnummer van een rij binnen
-de actuele selectie; het vervangt `Rank` niet en wordt ook niet gebruikt om te
-sorteren.
+De gebruiker kan een sporter kiezen en sport, jaar, `CompetitieSet` en discipline
+filteren. Filters kunnen worden gecombineerd en gewist. De tabel toont de
+oorspronkelijke `Rank` en een aparte kolom `Piekprestatie`. Gelijke rangen delen
+hetzelfde piekprestatienummer en daaropvolgende nummers worden overgeslagen.
 
-De dataset heeft vijf fictieve sporters met elk tien prestaties voor
-Olympische Spelen, WK, EK en World Cup. De rangen bevatten kleine en grotere
-waarden, onder andere 1, 2, 3, 5, 11, 13, 29 en 45.
+De dataset bevat vijftien fictieve sporters: vijf per sport, met elk tien
+prestaties voor Olympische Spelen, WK, EK en World Cup. Meerdere disciplines
+kunnen binnen hetzelfde jaar voorkomen. Olympische Spelen staan uitsluitend
+in 2024, 2021 en 2016. Wielrennen gebruikt
+`tijdrit` en `wegrace`; zwemmen gebruikt `100m vrije slag`, `100m rugslag`,
+`200m vrije slag` en `200m wisselslag`. Voor atletiek zijn voorlopig de
+fictieve disciplinecategorieën `100m`, `200m`, `400m` en `800m` gekozen.
 
-De volgende stap is de app met de gebruiker verder door te testen en te
-controleren of definities, filters, sortering en presentatie aan de wensen
-voldoen. Zie [de laatste overdracht](docs/handoffs/2026-11-18-mvp.md) voor een
-testplan en open punten. De huidige sorteerkeuzes zijn werkafspraken voor deze
-MVP en moeten bij die controle worden bevestigd.
+De tabel bevat `Piekprestatie`, `Rank`, `CompetitieSet`, `Jaar`, `Sport` en
+`Discipline`. Klik op een kolomkop om daarop oplopend te sorteren; klik opnieuw
+om aflopend te sorteren. De standaardvolgorde is `Rank` oplopend. Deze
+weergavesortering verandert de Piekprestatie-nummers niet: die worden na de
+filters op basis van `Rank` toegekend. Zie [de laatste overdracht](docs/handoffs/2026-11-19-kolomsortering.md)
+voor de actuele implementatiestatus en controles.
 
 ## Lokaal openen
 
 1. Open `index.html` rechtstreeks in een moderne browser.
 2. Kies een sporter.
-3. Vink desgewenst een of meer competitiegroepen en/of disciplines aan.
-4. Bekijk hoe `Resultaat` opnieuw vanaf 1 telt voor wat na de filters overblijft.
-5. Gebruik **Wis filters** om de competitie- en disciplinekeuze te legen.
+3. Vink desgewenst een of meer sporten, jaren, `CompetitieSet`-waarden en/of
+   disciplines aan.
+4. Bekijk hoe `Piekprestatie` na de filters opnieuw vanaf 1 wordt berekend, met
+   gedeelde nummers bij gelijke rangen.
+5. Gebruik **Wis filters** om alle filters te legen.
 
 Er is geen installatie, build, backend, import, externe dienst of netwerkverbinding
 nodig. De app leest geen bestanden; de fictieve dataset staat in `src/app.js`.
@@ -37,24 +44,25 @@ nodig. De app leest geen bestanden; de fictieve dataset staat in `src/app.js`.
 ## Huidige interpretatie van de regels
 
 - Een lager `Rank`-getal betekent een betere wedstrijdplaats.
-- De rijen worden oplopend op `Rank` gesorteerd. Bij gelijke `Rank` komt het
-  nieuwste jaar eerst; daarna wordt de competitiegroep alfabetisch gesorteerd.
-- `Resultaat` is een oplopend volgnummer na het toepassen van alle filters.
-  Zonder competitie- of disciplinefilter telt het over alle resultaten van de
-  gekozen sporter. Met een filter begint de nummering binnen die selectie weer
-  bij 1.
-- Meerdere aangevinkte competitiegroepen vormen samen een OR-selectie: een
-  resultaat mag bij elk van de geselecteerde groepen horen. Voor meerdere
-  disciplines geldt dezelfde OR-regel. Een resultaat moet tegelijk voldoen aan
-  de gekozen competitie- en disciplinefilters.
+- De beginvolgorde is oplopend op `Rank`. Bij gelijke `Rank` komt het nieuwste
+  jaar eerst; daarna wordt `CompetitieSet` alfabetisch gesorteerd. Een andere
+  kolomsortering wijzigt alleen de zichtbare volgorde, niet de toegekende
+  Piekprestatie-nummers.
+- `Piekprestatie` wordt na alle filters bepaald op basis van de oplopend
+  gesorteerde `Rank`-waarden. Gelijke `Rank`-waarden delen hetzelfde nummer en
+  daaropvolgende nummers worden overgeslagen (1, 2, 2, 4). De nummering begint
+  voor elke actuele selectie opnieuw bij 1.
+- Meerdere aangevinkte waarden voor sport, jaar, `CompetitieSet` en discipline
+  vormen elk een OR-selectie. Een resultaat moet tegelijk voldoen aan elke
+  gekozen filtercategorie.
 - Geen aangevinkte waarden betekent dat alle waarden van dat filtertype
   meetellen. De sporterkeuze is altijd vereist.
-- Gelijke rangen worden niet samengevoegd; elk resultaat krijgt zijn eigen
-  volgnummer.
+- Gelijke rangen blijven aparte rijen, maar delen hetzelfde nummer voor
+  `Piekprestatie`.
 
-Bevestig of wijzig deze interpretaties tijdens de volgende testsessie. Met name
-de betekenis van `Resultaat`, de sortering bij gelijke rangen en hoe filters
-moeten combineren zijn gebruikersregels, geen vastgestelde domeinregels.
+De rangnummering en de mogelijkheid om op andere kolommen te sorteren zijn
+geïmplementeerd. De overige sorteer- en filterkeuzes kunnen tijdens verder
+gebruik nog worden bijgesteld.
 
 ## Geautomatiseerde controles
 
@@ -65,12 +73,12 @@ ingebouwde Node.js test runner. Als Node.js beschikbaar is, voer uit:
 node --test tests/app.test.js
 ```
 
-De testset controleert dekking van de vier competitiegroepen, vijf sporters met
-tien resultaten elk, persoons- en competitiefilters, gecombineerde filters,
-disciplinefiltering, sortering, gelijke rangen, resultaatnummering en lege
-selecties. De tests zijn in de vorige werksessie aangemaakt maar konden toen
-niet worden uitgevoerd: `node` was niet beschikbaar in de omgeving. Voer ze de
-volgende keer uit wanneer Node.js beschikbaar is en los eventuele fouten op.
+De testset controleert dekking van de vier `CompetitieSet`-waarden, vijftien
+sporters met tien resultaten elk, alle drie sporten en de afgesproken
+disciplines. Ook controleert deze filtercombinaties, de beschikbare jaren,
+kolomsortering, gelijke rangen, Piekprestatie-nummering en lege selecties.
+De tests zijn nog niet uitgevoerd, omdat `node` niet beschikbaar is in de
+omgeving. Voer ze uit zodra Node.js beschikbaar is.
 
 ## Gegevensbescherming
 

@@ -13,16 +13,28 @@
     <header class="page-header">
       <p class="eyebrow">Lokale analysetool · fictieve gegevens</p>
       <h1>Piekprestaties</h1>
-      <p class="intro">Bekijk en vergelijk wedstrijdresultaten per sporter. Een lagere rang betekent een betere prestatie.</p>
+      <p class="intro">Rangschik prestaties van één sporter, een hele sport of een discipline. Een lagere rang betekent een betere prestatie.</p>
     </header>
 
     <section class="panel controls" aria-labelledby="filter-heading">
       <div class="panel-heading">
-        <div><p class="eyebrow">Verkennen</p><h2 id="filter-heading">Kies een sporter en filter prestaties</h2></div>
+        <div><p class="eyebrow">Verkennen</p><h2 id="filter-heading">Kies hoe je wilt rangschikken</h2></div>
         <button id="clear-filters" class="text-button" type="button">Wis filters</button>
       </div>
-      <label class="person-field" for="person-select">Sporter</label>
-      <select id="person-select"></select>
+      <label class="person-field" for="scope-select">Rangschikken op</label>
+      <select id="scope-select" aria-label="Rangschikken op">
+        <option value="person">Individuele sporter</option>
+        <option value="sport">Hele sport</option>
+        <option value="discipline">Discipline</option>
+      </select>
+      <div id="person-field">
+        <label class="person-field" for="person-select">Sporter</label>
+        <select id="person-select"></select>
+      </div>
+      <fieldset id="people-field" class="competition-filters" hidden>
+        <legend>Sporter <span>(optioneel filter, selecteer een of meer)</span></legend>
+        <div id="people-options" class="checkbox-grid"></div>
+      </fieldset>
       <fieldset class="competition-filters">
         <legend>Sport <span>(selecteer een of meer)</span></legend>
         <div id="sport-options" class="checkbox-grid"></div>

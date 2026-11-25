@@ -16,7 +16,7 @@ const sportGroups = [
     disciplines: ["100m", "200m", "400m", "800m"]
   }
 ];
-const rankPattern = [2, 1, 3, 4, 2, 3, 5, 6, 29, 45];
+const rankPattern = [1, 4, 7, 12, 2, 15, 20, 25, 29, 45];
 const yearPattern = [2024, 2024, 2023, 2022, 2021, 2021, 2020, 2019, 2016, 2016];
 const competitionPattern = ["Olympische Spelen", "WK", "EK", "World Cup", "Olympische Spelen", "EK", "WK", "World Cup", "EK", "Olympische Spelen"];
 const performances = sportGroups.flatMap(({ sport, people, disciplines }) =>
@@ -27,7 +27,9 @@ const performances = sportGroups.flatMap(({ sport, people, disciplines }) =>
       competitionSet: competitionPattern[index],
       year: yearPattern[index],
       discipline: disciplines[(index + personIndex) % disciplines.length],
-      rank
+      // Kleine fictieve variatie per sporter voorkomt dat elke sporter steeds
+      // dezelfde topplaatsen heeft, vooral bij gezamenlijke sportanalyses.
+      rank: rank + personIndex * 2 + (index % 2 === 1 ? personIndex : 0)
     }))
   )
 );
@@ -46,6 +48,21 @@ function getFilteredPerformances(rows, person, competitionSets = [], disciplines
     }));
 }
 
+function getAnalysisPerformances(rows, { scope = "person", person, people = [], competitionSets = [], disciplines = [], sports = [], years = [] } = {}) {
+  if (scope === "person") return getFilteredPerformances(rows, person, competitionSets, disciplines, sports, years);
+  if (scope === "sport" && sports.length === 0) return [];
+  if (scope === "discipline" && disciplines.length === 0) return [];
+  return rows
+    .filter((row) => people.length === 0 || people.includes(row.person))
+    .filter((row) => sports.length === 0 || sports.includes(row.sport))
+    .filter((row) => disciplines.length === 0 || disciplines.includes(row.discipline))
+    .filter((row) => competitionSets.length === 0 || competitionSets.includes(row.competitionSet))
+    .filter((row) => years.length === 0 || years.includes(row.year))
+    .slice()
+    .sort((a, b) => a.rank - b.rank || b.year - a.year || a.competitionSet.localeCompare(b.competitionSet) || a.discipline.localeCompare(b.discipline) || a.person.localeCompare(b.person))
+    .map((row, index, sortedRows) => ({ ...row, resultNumber: sortedRows.findIndex((candidate) => candidate.rank === row.rank) + 1 }));
+}
+
 function getSortedPerformances(rows, sortKey = "rank", direction = "asc") {
   const multiplier = direction === "desc" ? -1 : 1;
   return rows
@@ -62,7 +79,7 @@ function getSortedPerformances(rows, sortKey = "rank", direction = "asc") {
 }
 
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { performances, getFilteredPerformances, getSortedPerformances };
+  module.exports = { performances, getFilteredPerformances, getAnalysisPerformances, getSortedPerformances };
 }
 
 if (typeof document !== "undefined") {
@@ -78,6 +95,10 @@ if (typeof document !== "undefined") {
   const sportOptions = document.querySelector("#sport-options");
   const yearOptions = document.querySelector("#year-options");
   const disciplineOptions = document.querySelector("#discipline-options");
+  const peopleOptions = document.querySelector("#people-options");
+  const scopeSelect = document.querySelector("#scope-select");
+  const personField = document.querySelector("#person-field");
+  const peopleField = document.querySelector("#people-field");
   const results = document.querySelector("#results-container");
   const summary = document.querySelector("#result-summary");
   let sortKey = "rank";
@@ -124,13 +145,24 @@ if (typeof document !== "undefined") {
   });
 
   addCheckboxOptions([...new Set(performances.map((row) => row.discipline))].sort(), disciplineOptions, "discipline");
+  addCheckboxOptions(people, peopleOptions, "person-filter");
+
+  function selectedValues(container) {
+    return [...container.querySelectorAll("input:checked")].map((input) => input.value);
+  }
 
   function render() {
-    const selected = [...options.querySelectorAll("input:checked")].map((input) => input.value);
-    const selectedDisciplines = [...disciplineOptions.querySelectorAll("input:checked")].map((input) => input.value);
-    const selectedSports = [...sportOptions.querySelectorAll("input:checked")].map((input) => input.value);
-    const selectedYears = [...yearOptions.querySelectorAll("input:checked")].map((input) => Number(input.value));
-    const filteredRows = getFilteredPerformances(performances, personSelect.value, selected, selectedDisciplines, selectedSports, selectedYears);
+    const scope = scopeSelect.value;
+    personField.hidden = scope !== "person";
+    peopleField.hidden = scope === "person";
+    const selected = selectedValues(options);
+    const selectedDisciplines = selectedValues(disciplineOptions);
+    const selectedSports = selectedValues(sportOptions);
+    const selectedYears = selectedValues(yearOptions).map(Number);
+    const filteredRows = getAnalysisPerformances(performances, {
+      scope, person: personSelect.value, people: selectedValues(peopleOptions), competitionSets: selected,
+      disciplines: selectedDisciplines, sports: selectedSports, years: selectedYears
+    });
     const rows = getSortedPerformances(filteredRows, sortKey, sortDirection);
     results.replaceChildren();
     summary.textContent = `${rows.length} ${rows.length === 1 ? "prestatie" : "prestaties"}`;
@@ -144,6 +176,7 @@ if (typeof document !== "undefined") {
 
     const table = document.createElement("table");
     const columns = [
+      ...(scope === "person" ? [] : [{ key: "person", label: "Sporter" }]),
       { key: "piekprestatie", label: "Piekprestatie" },
       { key: "rank", label: "Rank" },
       { key: "competitionSet", label: "CompetitieSet" },
@@ -178,6 +211,11 @@ if (typeof document !== "undefined") {
     const body = document.createElement("tbody");
     rows.forEach((row) => {
       const tr = document.createElement("tr");
+      if (scope !== "person") {
+        const person = document.createElement("td");
+        person.textContent = row.person;
+        tr.append(person);
+      }
       const resultNumber = document.createElement("td");
       resultNumber.className = "result-number-cell";
       resultNumber.textContent = String(row.resultNumber);
@@ -203,8 +241,9 @@ if (typeof document !== "undefined") {
   }
 
   personSelect.addEventListener("change", render);
+  scopeSelect.addEventListener("change", render);
   document.querySelector("#clear-filters").addEventListener("click", () => {
-    [options, sportOptions, yearOptions, disciplineOptions].forEach((container) => {
+    [options, sportOptions, yearOptions, disciplineOptions, peopleOptions].forEach((container) => {
       container.querySelectorAll("input").forEach((input) => { input.checked = false; });
     });
     render();

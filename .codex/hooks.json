@@ -1,0 +1,19 @@
+{
+  "description": "Blocks local Codex tool calls that target data/Private.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/block_private_access.py\"",
+            "commandWindows": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"$repoRoot = git rev-parse --show-toplevel; & (Join-Path $repoRoot '.codex/hooks/block-private-access.ps1')\"",
+            "timeout": 5,
+            "statusMessage": "Checking Private folder access"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,6 +1,8 @@
 # Gevoelige lokale invoer: nooit aan Git toevoegen.
 Voorbeeld data/
+data/Voorbeelddata/
 data/private/
+data/Private/
 media/private/
 
 # Lokale configuratie en secrets.

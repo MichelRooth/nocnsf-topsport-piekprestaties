@@ -26,10 +26,9 @@ PowerPoint-export zijn nog niet gekozen.
 
 ## 4. Bronnen en afhankelijkheden
 
-- De gebruiker bevestigde dat de genoemde voorbeelden fictief zijn en gaf
-  toestemming om precies deze bestanden als ontwerpreferentie te bekijken:
-  `Voorbeeld data/Voorbeeld data - kolomnamen.xlsx` en
-  `Voorbeeld data/Gewenste output fictieve data Piekprestaties.xlsx`.
+- Bestanden onder `data/Voorbeelddata/` mogen als voorbeeldmateriaal worden
+  geopend wanneer een taak dat vereist. `data/Private/` blijft altijd buiten
+  bereik van agentwerk.
 - De kolomnamen en voorbeeldoutput zijn bekeken. De invoer bevat onder meer
   `Person`, `Person/Team`, `CompetitionSet` en `Rank`; de voorbeeldoutput toont
   onder meer `CompetitionSet`, `Year`, `Rank` en `Kolom aantal deelnames`.
@@ -54,10 +53,9 @@ worden niet naar Git gekopieerd of als testinvoer gebruikt.
 - Uitvoering: lokaal beoogd; technische isolatie en verwerking nog te
   controleren. Wie de toepassing uitvoert: gebruiker.
 - Agent mag lezen: broncode, documentatie, zelfgemaakte fictieve testdata en
-  uitsluitend de twee hierboven genoemde fictieve Excelbestanden als
-  ontwerpreferentie.
+  bestanden in `data/Voorbeelddata/` wanneer de taak dat vereist.
 - Agent mag niet lezen, printen, kopiëren, verwerken of uploaden: daadwerkelijke
-  invoer, andere bestanden in `Voorbeeld data/`, `data/private/`, `.env`,
+  invoer, alle bestanden in `data/Private/`, `.env`,
   `.env.*` (behalve een `.env.example` met fictieve waarden) en alle overige
   echte of vertrouwelijke sporterdata.
 - Ontwikkel en test met fictieve gegevens; geen echte gegevens in Git, prompts,
@@ -147,7 +145,7 @@ bestanden zijn bewust niet gekopieerd. Houd één bronmap aan. Bewaar fictieve
 voorbeelden onder `tests/fixtures/` of `data/example/` als die map nodig blijkt. De inhoud van
 niet-rootmappen is tijdens deze intake niet bekeken.
 
-De intakebestanden zijn bedoeld als eerste commit. De map `Voorbeeld data/`
+De intakebestanden zijn bedoeld als eerste commit. De map `data/Voorbeelddata/`
 blijft volledig uitgesloten; voeg de fictieve ontwerpreferenties niet toe aan
 die commit. Basis voor `.gitignore`, aan te vullen bij de gekozen techniek:
 
@@ -155,7 +153,8 @@ die commit. Basis voor `.gitignore`, aan te vullen bij de gekozen techniek:
 .env
 .env.*
 !.env.example
-data/private/
+data/Private/
+data/Voorbeelddata/
 Voorbeeld data/
 logs/runtime/
 logs/test/

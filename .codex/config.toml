@@ -1,0 +1,8 @@
+default_permissions = "project-edit"
+
+[permissions.project-edit]
+extends = ":workspace"
+
+[permissions.project-edit.filesystem.":workspace_roots"]
+"." = "write"
+"data/Private" = "deny"

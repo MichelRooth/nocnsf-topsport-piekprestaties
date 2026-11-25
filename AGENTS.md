@@ -12,18 +12,17 @@ De eerste uitwerking gebruikt uitsluitend fictieve gegevens.
 - Echte sporterdata en daadwerkelijke invoerbestanden niet lezen, importeren,
   kopiëren, verwerken of uploaden. Deze zijn buiten scope van de intake en dit
   project.
-- De gebruiker heeft uitsluitend toestemming gegeven om deze twee fictieve
-  bestanden als ontwerpreferentie te bekijken:
-  - `Voorbeeld data/Voorbeeld data - kolomnamen.xlsx`
-  - `Voorbeeld data/Gewenste output fictieve data Piekprestaties.xlsx`
-- Open geen andere bestanden in `Voorbeeld data/`. Kopieer de goedgekeurde
-  Excelbestanden niet naar de repository en gebruik ze niet als testinvoer.
-  Maak eigen fictieve testgegevens.
-- Gebruik geen echte gegevens in prompts, broncode, tests, logs,
-  foutmeldingen, screenshots of exports.
+- Open, lees of inventariseer nooit bestanden of submappen in `data/Private/`.
+  Dit geldt ook voor bestandsnamen, metadata, previews en testinvoer.
+- Bestanden in `data/Voorbeelddata/` mogen worden geopend wanneer de taak dat
+  vereist. Verwerk geen echte persoonsgegevens of daadwerkelijke invoer; gebruik
+  voor ontwikkeling en tests eigen fictieve gegevens.
+- Gebruik geen echte gegevens in prompts, broncode, tests, logs, foutmeldingen,
+  screenshots of exports.
 - Gebruik uitsluitend fictieve testgegevens.
-- De map `Voorbeeld data/` blijft volledig uitgesloten van Git. `.gitignore`
-  is geen toegangsbeveiliging.
+- `data/Private/` blijft volledig uitgesloten van Git. `.gitignore` is geen
+  toegangsbeveiliging; de Codex-hook en sandboxregel in `.codex/` zijn
+  agentguardrails.
 - Vraag om verduidelijking voordat een taak buiten deze afgesproken
   fictieve-only scope zou treden; ga niet uit van toestemming om echte gegevens
   te verwerken.

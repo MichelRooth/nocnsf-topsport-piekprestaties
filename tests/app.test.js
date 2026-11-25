@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { performances, getFilteredPerformances, getAnalysisPerformances, getSortedPerformances } = require("../src/app.js");
+const { performances, getFilteredPerformances, getAnalysisPerformances, getAvailableDisciplines, getSortedPerformances } = require("../src/app.js");
 
 test("fictieve dataset dekt alle vier competitiegroepen", () => {
   assert.deepEqual(
@@ -62,6 +62,13 @@ test("zwemdata gebruikt de vier opgegeven disciplines", () => {
     [...new Set(performances.filter((row) => row.sport === "Zwemmen").map((row) => row.discipline))].sort(),
     ["100m vrije slag", "100m rugslag", "200m vrije slag", "200m wisselslag"].sort()
   );
+});
+
+test("beschikbare disciplines volgen de geselecteerde sport", () => {
+  assert.deepEqual(getAvailableDisciplines(performances, ["Wielrennen"]), ["tijdrit", "wegrace"]);
+  assert.deepEqual(getAvailableDisciplines(performances, ["Atletiek"]), ["100m", "200m", "400m", "800m"]);
+  assert.deepEqual(getAvailableDisciplines(performances, ["Zwemmen"]), ["100m rugslag", "100m vrije slag", "200m vrije slag", "200m wisselslag"]);
+  assert.deepEqual(getAvailableDisciplines(performances), getAvailableDisciplines(performances, ["Atletiek", "Wielrennen", "Zwemmen"]));
 });
 
 test("Olympische Spelen komen alleen voor in 2024, 2021 en 2016", () => {

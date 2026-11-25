@@ -63,6 +63,12 @@ function getAnalysisPerformances(rows, { scope = "person", person, people = [], 
     .map((row, index, sortedRows) => ({ ...row, resultNumber: sortedRows.findIndex((candidate) => candidate.rank === row.rank) + 1 }));
 }
 
+function getAvailableDisciplines(rows, sports = []) {
+  return [...new Set(rows
+    .filter((row) => sports.length === 0 || sports.includes(row.sport))
+    .map((row) => row.discipline))].sort((a, b) => a.localeCompare(b, "nl"));
+}
+
 function getSortedPerformances(rows, sortKey = "rank", direction = "asc") {
   const multiplier = direction === "desc" ? -1 : 1;
   return rows
@@ -79,7 +85,7 @@ function getSortedPerformances(rows, sortKey = "rank", direction = "asc") {
 }
 
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { performances, getFilteredPerformances, getAnalysisPerformances, getSortedPerformances };
+  module.exports = { performances, getFilteredPerformances, getAnalysisPerformances, getAvailableDisciplines, getSortedPerformances };
 }
 
 if (typeof document !== "undefined") {
@@ -111,7 +117,7 @@ if (typeof document !== "undefined") {
     personSelect.append(option);
   });
 
-  function addCheckboxOptions(values, container, idPrefix) {
+  function addCheckboxOptions(values, container, idPrefix, selected = []) {
     values.forEach((value, index) => {
       const label = document.createElement("label");
       label.className = "checkbox-option";
@@ -119,7 +125,11 @@ if (typeof document !== "undefined") {
       input.type = "checkbox";
       input.value = String(value);
       input.id = `${idPrefix}-${index}`;
-      input.addEventListener("change", render);
+      input.checked = selected.includes(String(value));
+      input.addEventListener("change", () => {
+        if (container === sportOptions) refreshDisciplineOptions();
+        render();
+      });
       const text = document.createElement("span");
       text.textContent = String(value);
       label.append(input, text);
@@ -144,12 +154,20 @@ if (typeof document !== "undefined") {
     options.append(label);
   });
 
-  addCheckboxOptions([...new Set(performances.map((row) => row.discipline))].sort(), disciplineOptions, "discipline");
   addCheckboxOptions(people, peopleOptions, "person-filter");
 
   function selectedValues(container) {
     return [...container.querySelectorAll("input:checked")].map((input) => input.value);
   }
+
+  function refreshDisciplineOptions() {
+    const selected = selectedValues(disciplineOptions);
+    const available = getAvailableDisciplines(performances, selectedValues(sportOptions));
+    disciplineOptions.replaceChildren();
+    addCheckboxOptions(available, disciplineOptions, "discipline", selected);
+  }
+
+  refreshDisciplineOptions();
 
   function render() {
     const scope = scopeSelect.value;
@@ -246,6 +264,7 @@ if (typeof document !== "undefined") {
     [options, sportOptions, yearOptions, disciplineOptions, peopleOptions].forEach((container) => {
       container.querySelectorAll("input").forEach((input) => { input.checked = false; });
     });
+    refreshDisciplineOptions();
     render();
   });
   render();

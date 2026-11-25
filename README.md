@@ -64,6 +64,10 @@ nodig. De app leest geen bestanden; de fictieve dataset staat in `src/app.js`.
 - Meerdere aangevinkte waarden voor sport, jaar, `CompetitieSet` en discipline
   vormen elk een OR-selectie. Een resultaat moet tegelijk voldoen aan elke
   gekozen filtercategorie.
+- De beschikbare disciplines passen zich aan de geselecteerde sporten aan.
+  Bij meerdere sporten worden disciplines getoond die bij minstens één
+  geselecteerde sport horen; zonder sportselectie zijn alle disciplines
+  beschikbaar.
 - Geen aangevinkte waarden betekent dat alle waarden van dat filtertype
   meetellen. Een sportkeuze is vereist voor sportniveau en een disciplinekeuze
   voor disciplineniveau. Op die niveaus kan de sporter als optionele filter

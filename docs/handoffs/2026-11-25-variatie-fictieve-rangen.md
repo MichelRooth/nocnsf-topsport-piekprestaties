@@ -10,6 +10,9 @@
 - Sportniveau vereist minstens één gekozen sport. Disciplineniveau vereist
   minstens één gekozen discipline. Jaar en `CompetitieSet` kunnen op elk niveau
   aanvullend worden gefilterd.
+- De disciplineopties volgen de sportselectie. Bij meerdere sporten zijn de
+  disciplines beschikbaar die bij minstens één gekozen sport horen; zonder
+  sportselectie zijn alle disciplines beschikbaar.
 - De tabel toont op sport- en disciplineniveau ook de sporter per resultaat.
 - `Piekprestatie` wordt na toepassing van de filters toegekend op basis van
   `Rank`. Gelijke rangen delen een nummer en volgende nummers worden
@@ -31,7 +34,7 @@
 - `src/app.js` — fictieve data, filters, analyseniveaus en rangschikking.
 - `index.html` en `src/styles.css` — bediening en weergave.
 - `tests/app.test.js` — fictieve controles voor filters, rangverdeling,
-  analyseniveaus en gelijke rangen.
+  analyseniveaus, sportafhankelijke disciplineopties en gelijke rangen.
 - `README.md` — bijgewerkte gebruiksinstructies.
 
 `git diff --check` is uitgevoerd. `node --test tests/app.test.js` kon niet
